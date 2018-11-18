@@ -7,7 +7,7 @@
 
 	<display-name>cursojsfeprimefaces</display-name>
 		<welcome-file-list>
-		<welcome-file>index.xhtml</welcome-file>
+		<welcome-file>index.jsf</welcome-file>
 	</welcome-file-list>
 	  
 	<servlet>
@@ -18,7 +18,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
-	  	<url-pattern>*.xhtml</url-pattern>
+	  	<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
 	
 	<session-config>
@@ -27,22 +27,22 @@
     
     <error-page>
     	<exception-type>org.springframework.security.access.AccessDeniedException</exception-type>
-    	<location>/page/error/access_denied.jsf</location>
+    	<location>/page/error/access_denied.xhtml</location>
     </error-page>
     
     <error-page>
     	<exception-type>com.sun.faces.context.FacesFileNotFoundException</exception-type>
-    	<location>/page/error/page_not_found.jsf</location>
+    	<location>/page/error/page_not_found.xhtml</location>
     </error-page>
     
     <error-page>
     	<error-code>403</error-code>
-    	<location>/page/error/access_denied.jsf</location>
+    	<location>/page/error/access_denied.xhtml</location>
     </error-page>
     
     <error-page>
     	<error-code>500</error-code>
-    	<location>/page/error/error.jsf</location>
+    	<location>/page/error/error.xhtml</location>
     </error-page>
     
     <context-param>
