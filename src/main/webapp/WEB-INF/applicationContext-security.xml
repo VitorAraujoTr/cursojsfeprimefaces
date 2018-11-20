@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/brans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	
+	<global-method-security secured-annotations="enabled"/>
+	
+	<http auto-config="true" 
+		access-denied-page="/page/error/acessoNegado.xhtml"
+		use-expressions="true">
+		
+		<intercept-url pattern="/page/cadastro/cad_permissao.jsf"
+			access="hasAnyRole('ADMIN)" method="POST"/>
+		
+		<intercept-url pattern="/resources/components/**"
+			access="isAuthenticated() and hasAnyRole('USER')"/>
+		
+		<intercept-url pattern="/resources/**"
+			access="isAuthenticated() and hasAnyRole('USER')"/>
+		
+		<intercept-url pattern="/page/error/**"
+			access="isAnonymous() or isAuthenticated() or !isAuthenticated()"/>
+		
+		<intercept-url pattern="/page/cadastro/**"
+			access="isAuthenticated() and hasAnyRole('USER')"/>
+			
+		<intercept-url pattern="/page/public/**"
+			access="permitAll"/>
+			
+		<form-login login-page="/page/public/login.jsf"
+			always-use-default-target="true" default-target-url="/page/restrict/principal.jsf"
+			authentication-failure-url="/page/public/login.jsf?login_error=1"/>
+			
+		<logout invalidate-session="true" logout-success-url="/page/public/login.jsf"
+			logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID"/>
+			
+		<remember-me token-validity-seconds="1209600"/>
+		
+		<session-management invalid-session-url="/page/public/login.jsf"
+			session-fixation-protection="migrateSession">
+			<concurrency-control max-sessions="1" 
+				expired-url="/page/public/login.jsf"
+				error-if-maximum-exceeded="true"/>
+		</session-management>
+	</http>
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="plaintext"/>
+			<jdbc-user-service data-source-ref="springDataSource"
+				users-by-username-query="SELECT ent_login AS username,
+											ent_senha AS password,
+        									'true' AS enable
+       										 from entidade
+        									where ent_inativo = false
+        									and upper(ent_login) = upper(?)"
+				authorities-by-username-query="SELECT u.ent_login as username,
+												p.esa_codigo as authority
+        										FROM entidade u
+       											JOIN entidadeacesso p
+        										ON u.ent_codigo = p.ent_codigo
+        										WHERE u.ent_inativo = false
+        										AND UPPER(u.ent_login) = UPPER(?)"/>
+		</authentication-provider>
+	</authentication-manager>
+</b:beans>
